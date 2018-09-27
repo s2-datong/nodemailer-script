@@ -12,6 +12,8 @@
     "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
-    "nodemailer": "^4.6.8"
+    "express-fileupload": "^1.0.0-alpha.1",
+    "nodemailer": "^4.6.8",
+    "queryable": "^0.3.6"
   }
 }

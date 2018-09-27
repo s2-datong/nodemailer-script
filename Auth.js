@@ -1,0 +1,1 @@
+//Provide basic token authentication to secure endpoint
