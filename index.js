@@ -6,14 +6,16 @@ const fs = require('fs')
 const bodyparser = require('body-parser')
 const app = express()
 const fileUpload = require('express-fileupload')
-
-const urlencoded_parser = bodyparser.urlencoded({ extended: false })
-const fileuploadParser = fileUpload()
 const templates = require('./HtmlTemplates.js')
 
-let HtmlTemplate = new HtmlTemplates();
+const urlencoded_parser = bodyparser.urlencoded({ extended: false })
+const jsonParser = bodyparser.json()
+const fileuploadParser = fileUpload()
 
-app.post("/send_email", urlencoded_parser, async (req, res) => {
+
+let HtmlTemplate = new templates();
+
+app.post("/send_email", [urlencoded_parser, jsonParser], async (req, res) => {
 
 	if(!req.body.to || !req.body.subject) return res.json({status: 400, message:'Validation Error. Please provide to and subject'})
 	if(!req.body.template_name) return res.json({status:400, message:'Please provide a template name'})
@@ -30,11 +32,11 @@ app.post("/send_email", urlencoded_parser, async (req, res) => {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASSWORD
         },
-		dkim: {
+		/*dkim: {
 			domainName: process.env.DKIM_DOMAIN,
 			keySelector: process.env.DKIM_KEY_SELECTOR,
 			privateKey: await getFile(process.env.DKIM_PRIVATE_KEY)
-		}
+		}*/
     });
 
     // setup email data with unicode symbols

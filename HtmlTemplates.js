@@ -46,19 +46,26 @@ class HtmlTemplates
 	
 	async MergeTemplate(name, dictionary){
 		// take a html template and merge values into it
-		let template = await getFile( process.env.EMAIL_TEMPLATE_PATH + name )
-		let keys = Object.Keys(dictionary)
-		let tkey = process.env.EMAIL_TEMPLATE_KEY;
-		
-		for(i in keys){
-			key = keys[i];
-			template = template.replace(tkey + key + tkey, dictionary[key])
+		try{
+			let template = await this.getFile( process.env.EMAIL_TEMPLATE_PATH + name )
+			let keys = Object.keys(dictionary)
+			let tkey = process.env.EMAIL_TEMPLATE_KEY;
+			
+			let i;
+			for(i in keys){
+				let key = keys[i];
+				let find = tkey + key + tkey;
+				template = template.replace(new RegExp(find, 'g'), dictionary[key]);
+			}
+			return template;
 		}
-		
-		return template;
+		catch(e){
+			console.log(e)
+		}
+
 	}
 	
-	function getFile(path){
+	getFile(path){
 		return new Promise((resolve, reject) =>{
 			fs.readFile(path, 'utf8', (err, data) => {
 				if(err) reject(err)
@@ -67,3 +74,5 @@ class HtmlTemplates
 		})
 	}
 }
+
+module.exports = HtmlTemplates
